@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+
+	<inherits name="com.google.gwt.xml.XML" />
+	<inherits name="mojo.gwt.http.HTTP" />
+
+	<generate-with class="mojo.gwt.data.rebind.DataTypeGenerator">
+		<when-type-assignable class="mojo.gwt.data.client.type.ClassType" />
+	</generate-with>
+
+</module>

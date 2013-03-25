@@ -1,0 +1,15 @@
+@external .WebDialog;
+@external .withGlass;
+@external .closeImage;
+
+.WebDialog .withGlass {
+}
+
+.WebDialog .closeImage {
+	float: right;
+	width: 16px;
+	height: 16px;
+	margin-top: 8px;
+	margin-right: 8px;
+	cursor: pointer;
+}

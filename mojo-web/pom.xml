@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>mojo</groupId>
+		<artifactId>mojo</artifactId>
+		<version>1.0</version>
+	</parent>
+
+	<artifactId>mojo-web</artifactId>
+	<packaging>jar</packaging>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>mojo</groupId>
+			<artifactId>mojo-dao</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>org.springframework.web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>org.springframework.web.servlet</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+		</dependency>
+
+		<dependency>
+			<!-- provided -->
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<!-- provided -->
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet.jsp.jstl</groupId>
+			<artifactId>jstl-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.web</groupId>
+			<artifactId>jstl-impl</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-servlet</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-jsp</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>net.jawr</groupId>
+			<artifactId>jawr</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.openid4java</groupId>
+			<artifactId>openid4java-consumer</artifactId>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<resources>
+
+			<resource>
+				<!-- default resources -->
+				<directory>${project.basedir}/src/main/resources</directory>
+			</resource>
+
+			<resource>
+				<!-- gwt sources and web resources -->
+				<directory>${project.basedir}/src/main/java</directory>
+				<includes>
+					<include>*/gwt/*/client/**</include>
+					<include>**/*.jsp</include>
+				</includes>
+			</resource>
+
+		</resources>
+	</build>
+
+</project>

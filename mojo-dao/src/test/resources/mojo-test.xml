@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<import resource="classpath:mojo-dao.xml" />
+
+	<!-- TEST ENTITY MANAGER / DATA SOURCE -->
+
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+		<property name="jpaProperties">
+			<props>
+				<prop key="javax.persistence.validation.mode">none</prop>
+				<prop key="hibernate.connection.driver_class">org.apache.derby.jdbc.EmbeddedDriver</prop>
+				<prop key="hibernate.connection.url">jdbc:derby:memory:mojo;create=true</prop>
+				<prop key="hibernate.dialect">org.hibernate.dialect.DerbyDialect</prop>
+				<prop key="hibernate.hbm2ddl.auto">create-drop</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- TEST REPOSITORIES -->
+
+	<bean id="personRepository" class="mojo.dao.core.jpa.JpaRepository">
+		<property name="entityType" value="mojo.dao.test.model.Person" />
+	</bean>
+
+	<bean id="petRepository" class="mojo.dao.core.jpa.JpaSubRepository">
+		<property name="entityType" value="mojo.dao.test.model.Pet" />
+		<property name="masterType" value="mojo.dao.test.model.Person" />
+		<property name="propertyName" value="owner" />
+	</bean>
+
+	<bean id="phoneRepository" class="mojo.dao.core.jpa.JpaSubRepository">
+		<property name="entityType" value="mojo.dao.test.model.Phone" />
+		<property name="masterType" value="mojo.dao.test.model.Person" />
+		<property name="propertyName" value="phones" />
+		<property name="inverseLink" value="true" />
+	</bean>
+
+	<!-- TEST SERVICES -->
+
+	<bean id="personService" class="mojo.dao.core.DataService">
+		<property name="repository" ref="personRepository" />
+	</bean>
+
+	<bean id="petService" class="mojo.dao.core.DataService">
+		<property name="repository" ref="petRepository" />
+	</bean>
+
+	<bean id="phoneService" class="mojo.dao.core.DataService">
+		<property name="repository" ref="phoneRepository" />
+	</bean>
+
+</beans>

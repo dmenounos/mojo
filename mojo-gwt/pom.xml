@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>mojo</groupId>
+		<artifactId>mojo</artifactId>
+		<version>1.0</version>
+	</parent>
+
+	<artifactId>mojo-gwt</artifactId>
+	<packaging>jar</packaging>
+
+	<dependencies>
+
+		<dependency>
+			<!-- provided -->
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+		</dependency>
+
+		<dependency>
+			<!-- provided -->
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-dev</artifactId>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<resources>
+
+			<resource>
+				<!-- default resources -->
+				<directory>${project.basedir}/src/main/resources</directory>
+			</resource>
+
+			<resource>
+				<!-- gwt sources and web resources -->
+				<directory>${project.basedir}/src/main/java</directory>
+				<includes>
+					<include>*/gwt/*/client/**</include>
+					<include>**/*.jsp</include>
+				</includes>
+			</resource>
+
+		</resources>
+	</build>
+
+</project>

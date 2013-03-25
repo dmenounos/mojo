@@ -1,0 +1,14 @@
+@external .WebPopup;
+@external .withGlass;
+@external .closeImage;
+
+.WebPopup .withGlass {
+}
+
+.WebPopup .closeImage {
+	position: absolute;
+	top: -22px;
+	right: -22px;
+	display: none;
+	cursor: pointer;
+}

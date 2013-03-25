@@ -1,0 +1,10 @@
+bin
+out
+
+# eclipse
+.externalToolBuilders
+.settings
+.classpath
+.project
+
+derby.log
