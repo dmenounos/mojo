@@ -26,6 +26,7 @@ import com.google.gwt.place.shared.Prefix;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 
 import mojo.gwt.http.client.WebRequestBuilder;
 import mojo.gwt.http.client.WebRequestCallback;
@@ -68,32 +69,44 @@ public class PageActivity extends BaseActivity<PagePlace> {
 
 			@Override
 			public void onResponseReceived(Request request, Response response) {
+				String contentType = response.getHeader("Content-Type");
+
+				if (contentType == null || contentType.isEmpty()) {
+					return;
+				}
+
 				switch (response.getStatusCode()) {
 				case Response.SC_OK:
-					String text = response.getText();
+					if (contentType.startsWith("text/html")) {
+						String text = response.getText();
 
-					// comments mark the beginning and ending bounds
-					// of the content region that will be stripped out
-					String[] comments = { OUTER_ALPHA, OUTER_OMEGA };
+						// comments mark the beginning and ending bounds
+						// of the content region that will be stripped out
+						String[] comments = { OUTER_ALPHA, OUTER_OMEGA };
 
-					if (POPUP_VALUE.equals(place.getRel())) {
-						// custom content regions can be specified
-						// by setting a popup rel attribute on links
-						comments[0] = INNER_ALPHA;
-						comments[1] = INNER_OMEGA;
+						if (POPUP_VALUE.equals(place.getRel())) {
+							// custom content regions can be specified
+							// by setting a popup rel attribute on links
+							comments[0] = INNER_ALPHA;
+							comments[1] = INNER_OMEGA;
+						}
+
+						int bgn = text.indexOf(comments[0]);
+						int end = text.indexOf(comments[1]);
+
+						if (bgn != -1 && end != -1) {
+							end += comments[1].length();
+
+							// strip out the matched content
+							String html = text.substring(bgn, end);
+
+							HTMLPanel panel = new HTMLPanel(html);
+							container.setWidget(panel);
+						}
 					}
-
-					int bgn = text.indexOf(comments[0]);
-					int end = text.indexOf(comments[1]);
-
-					if (bgn != -1 && end != -1) {
-						end += comments[1].length();
-
-						// strip out the matched content
-						String html = text.substring(bgn, end);
-
-						HTMLPanel panel = new HTMLPanel(html);
-						container.setWidget(panel);
+					else if (contentType.startsWith("image/")) {
+						Image image = new Image(place.uri);
+						container.setWidget(image);
 					}
 
 					break;
@@ -105,6 +118,20 @@ public class PageActivity extends BaseActivity<PagePlace> {
 
 				WebUtils.hideLoadingMask();
 			}
+
+			/*
+			private void debugInfo(Request request, Response response) {
+				StringBuilder sb = new StringBuilder("WebRequestCallback.onResponseReceived ");
+				sb.append(" statusCode: " + response.getStatusCode());
+				GWT.log(sb.toString());
+
+				for (Header header : response.getHeaders()) {
+					sb = new StringBuilder("WebRequestCallback.onResponseReceived ");
+					sb.append(header.getName() + ": " + header.getValue());
+					GWT.log(sb.toString());
+				}
+			}
+			 */
 		});
 
 		builder.send();

@@ -21,6 +21,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.user.client.ui.Image;
 
 import mojo.gwt.ui.client.WebPopup;
 
@@ -44,21 +45,64 @@ public class PortalPopup extends WebPopup {
 	}
 
 	@Override
-	public void show() {
-		super.show();
+	protected void doCenter() {
+		float documentWidth  = Document.get().getClientWidth();
+		float documentHeight = Document.get().getClientHeight();
+		float documentRatio  = documentWidth / documentHeight;
 
-		float dw = Document.get().getClientWidth();
-		float dh = Document.get().getClientHeight();
-		float dr = dw / dh;
+		if (getWidget() instanceof Image) {
+			int decorationSize = 80; // approximately
 
-		float ew = getContainerElement().getClientWidth();
-		float eh = ew / dr;
+			// calculate our outer dimensions, including decoration
+			float outerWidth  = getElement().getClientWidth()  + decorationSize;
+			float outerHeight = getElement().getClientHeight() + decorationSize;
 
-		String wstr = Math.round(ew) + 20 + "px";
-		String hstr = Math.round(eh) + 20 + "px";
+			if (outerWidth > documentWidth || outerHeight > documentHeight) {
 
-		getContainerElement().getStyle().setProperty("width", wstr);
-		getContainerElement().getStyle().setProperty("height", hstr);
+				// our outer dimensions are larger than the browser view-port.
+
+				float imageWidth  = getWidget().getElement().getClientWidth();
+				float imageHeight = getWidget().getElement().getClientHeight();
+				float imageRatio  = imageWidth / imageHeight;
+
+				// scale-in the inner image by calculating
+				// a ratio based on its larger dimension
+
+				float scaleRatio = 1.0f;
+
+				if (imageRatio > documentRatio) {
+					float margin = outerWidth - imageWidth;
+					scaleRatio = (documentWidth - margin) / imageWidth;
+				}
+				else if (imageRatio < documentRatio) {
+					float margin = outerHeight - imageHeight;
+					scaleRatio = (documentHeight - margin) / imageHeight;
+				}
+
+				imageWidth  *= scaleRatio;
+				imageHeight *= scaleRatio;
+
+				String widthString  = Math.round(imageWidth)  + "px";
+				String heightString = Math.round(imageHeight) + "px";
+
+				getWidget().getElement().getStyle().setProperty("width",  widthString);
+				getWidget().getElement().getStyle().setProperty("height", heightString);
+			}
+		}
+		else {
+			float innerWidth  = getContainerElement().getClientWidth();
+			float innerHeight = innerWidth / documentRatio;
+
+			int scrollbarsSize = 20; // approximately
+
+			String widthString  = Math.round(innerWidth)  + scrollbarsSize + "px";
+			String heightString = Math.round(innerHeight) + scrollbarsSize + "px";
+
+			getContainerElement().getStyle().setProperty("width",  widthString);
+			getContainerElement().getStyle().setProperty("height", heightString);
+		}
+
+		super.doCenter();
 	}
 
 	public interface Resources extends ClientBundle {

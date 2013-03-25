@@ -20,6 +20,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasLoadHandlers;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
@@ -100,21 +103,70 @@ public class WebPopup extends PopupPanel {
 		super.onUnload();
 	}
 
+	/**
+	 * The show / hide implementation through animation is broken beyond repair.
+	 * Private resizeAnimation, ANIMATION_DURATION. No start / complete
+	 * callback methods. Convoluted state handling.
+	 * 
+	 * Its a f-u-c-k-i-n-g mess.
+	 */
+	@Override
+	public void show() {
+		boolean isAnimated = isAnimationEnabled();
+		boolean isLoadWidget = getWidget() instanceof HasLoadHandlers;
+		setAnimationEnabled(isAnimated && !isLoadWidget);
+		super.show();
+	}
+
 	@Override
 	public void center() {
+		if (getWidget() instanceof HasLoadHandlers) {
+			HasLoadHandlers hasLoadHandlers = (HasLoadHandlers) getWidget();
+			hasLoadHandlers.addLoadHandler(new LoadHandler() {
+
+				@Override
+				public void onLoad(LoadEvent event) {
+					doCenter();
+					setVisible(true);
+				}
+			});
+		}
+
+		// hide until the widget has been loaded
+		setVisible(false);
+
+		// attach our element into DOM
+		show();
+
+		if (!(getWidget() instanceof HasLoadHandlers)) {
+			doCenter();
+			setVisible(true);
+		}
+	}
+
+	protected void doCenter() {
+		// if we have not been shown
+		// the super.center() will call show()
+		// in order to attach our element into DOM
+
 		super.center();
+
+		// if we have not been shown and have animation
+		// the super.center() will have the animation started
 
 		Timer timer = new Timer() {
 
 			@Override
 			public void run() {
-				// browser css workarounds
+				// browser workarounds
 				getElement().getStyle().setProperty("clip", "auto");
 				getCloseImage().getElement().getStyle().setProperty("display", "block");
 			}
 		};
 
-		timer.schedule(isAnimationEnabled() ? 230 : 0);
+		// animation duration is 200 milliseconds
+		// frame time is either 25 or 16 milliseconds
+		timer.schedule(isAnimationEnabled() ? 250 : 0);
 	}
 
 	public interface Resources extends ClientBundle {
