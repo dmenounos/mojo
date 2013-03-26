@@ -115,7 +115,6 @@ public class WebPopup extends PopupPanel {
 
 	@Override
 	public void setAnimationEnabled(boolean enabled) {
-		super.setAnimationEnabled(false);
 		this.animationEnabled = enabled;
 	}
 

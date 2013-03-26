@@ -2,7 +2,8 @@
 @external .withGlass;
 @external .closeImage;
 
-.WebDialog .withGlass {
+.WebDialog.withGlass {
+	z-index: 999;
 }
 
 .WebDialog .closeImage {
