@@ -16,17 +16,21 @@
  */
 package mojo.gwt.ui.client;
 
+import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasLoadHandlers;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PopupPanel;
 
@@ -103,70 +107,201 @@ public class WebPopup extends PopupPanel {
 		super.onUnload();
 	}
 
-	/**
-	 * The show / hide implementation through animation is broken beyond repair.
-	 * Private resizeAnimation, ANIMATION_DURATION. No start / complete
-	 * callback methods. Convoluted state handling.
-	 * 
-	 * Its a f-u-c-k-i-n-g mess.
-	 */
-	@Override
-	public void show() {
-		boolean isAnimated = isAnimationEnabled();
-		boolean isLoadWidget = getWidget() instanceof HasLoadHandlers;
-		setAnimationEnabled(isAnimated && !isLoadWidget);
-		super.show();
+	private boolean animationEnabled;
+
+	public boolean hasAnimationEnabled() {
+		return animationEnabled;
 	}
 
 	@Override
-	public void center() {
+	public void setAnimationEnabled(boolean enabled) {
+		super.setAnimationEnabled(false);
+		this.animationEnabled = enabled;
+	}
+
+	@Override
+	public void setPopupPositionAndShow(final PositionCallback callback) {
 		if (getWidget() instanceof HasLoadHandlers) {
 			HasLoadHandlers hasLoadHandlers = (HasLoadHandlers) getWidget();
 			hasLoadHandlers.addLoadHandler(new LoadHandler() {
 
 				@Override
 				public void onLoad(LoadEvent event) {
-					doCenter();
+					callback.setPosition(getOffsetWidth(), getOffsetHeight());
 					setVisible(true);
 				}
 			});
 		}
 
-		// hide until the widget has been loaded
 		setVisible(false);
-
-		// attach our element into DOM
 		show();
 
 		if (!(getWidget() instanceof HasLoadHandlers)) {
-			doCenter();
+			callback.setPosition(getOffsetWidth(), getOffsetHeight());
 			setVisible(true);
 		}
 	}
 
-	protected void doCenter() {
-		// if we have not been shown
-		// the super.center() will call show()
-		// in order to attach our element into DOM
-
-		super.center();
-
-		// if we have not been shown and have animation
-		// the super.center() will have the animation started
-
-		Timer timer = new Timer() {
+	@Override
+	public void center() {
+		setPopupPositionAndShow(new PositionCallback() {
 
 			@Override
-			public void run() {
-				// browser workarounds
-				getElement().getStyle().setProperty("clip", "auto");
-				getCloseImage().getElement().getStyle().setProperty("display", "block");
+			public void setPosition(int offsetWidth, int offsetHeight) {
+				prepareCenterDimension();
+				prepareCenterPosition();
+				resizeAnimation.setState(true);
 			}
-		};
+		});
+	}
 
-		// animation duration is 200 milliseconds
-		// frame time is either 25 or 16 milliseconds
-		timer.schedule(isAnimationEnabled() ? 250 : 0);
+	protected void prepareCenterDimension() {
+		// Reset element position and dimensions.
+		// If left/top are set from a previous call, and our content has
+		// changed, we may get a bogus getOffsetWidth because our new
+		// content is wrapping (giving a lower offset width) then it would
+		// without the previous left. Setting left/top back to 0 avoids this.
+		getElement().getStyle().setPropertyPx("left", 0);
+		getElement().getStyle().setPropertyPx("top",  0);
+		getElement().getStyle().clearWidth();
+		getElement().getStyle().clearHeight();
+	}
+
+	protected void prepareCenterPosition() {
+		// Calculate space in between view-port and widget.
+		int left = (Window.getClientWidth()  - getOffsetWidth())  >> 1;
+		int top  = (Window.getClientHeight() - getOffsetHeight()) >> 1;
+
+		// Add possible scroll offset.
+		// When the widget is larger than the view-port, the calculated
+		// space from previous step will be negative, so resort to 0.
+		left = Math.max(Window.getScrollLeft() + left, 0);
+		top  = Math.max(Window.getScrollTop()  + top,  0);
+
+		setPopupPosition(left, top);
+		getElement().getStyle().setProperty("position", "absolute");
+	}
+
+	/**
+	 * Show or hide the glass.
+	 */
+	protected void maybeShowGlass(boolean showing) {
+		if (isGlassEnabled()) {
+			if (showing) {
+				Document.get().getBody().appendChild(getGlassElement());
+
+				// resizeRegistration = Window.addResizeHandler(curPanel.glassResizer);
+				// curPanel.glassResizer.onResize(null);
+			}
+			else {
+				Document.get().getBody().removeChild(getGlassElement());
+
+				// resizeRegistration.removeHandler();
+				// resizeRegistration = null;
+			}
+		}
+	}
+
+	protected static final int ANIMATION_DURATION = 200;
+	protected AnimationType animType = AnimationType.CENTER;
+	protected ResizeAnimation resizeAnimation = new ResizeAnimation(this);
+
+	protected static enum AnimationType {
+		CENTER, ONE_WAY_CORNER, ROLL_DOWN
+	}
+
+	protected static class ResizeAnimation extends Animation {
+
+		/**
+		 * The {@link PopupPanel} being affected.
+		 */
+		private WebPopup popup;
+
+		/**
+		 * A boolean indicating whether we are showing or hiding the popup.
+		 */
+		private boolean showing;
+
+		/**
+		 * The offset height and width of the current {@link PopupPanel}.
+		 */
+		private int offsetHeight, offsetWidth = -1;
+
+		// private HandlerRegistration resizeRegistration;
+
+		public ResizeAnimation(WebPopup panel) {
+			this.popup = panel;
+		}
+
+		public void setState(boolean showing) {
+			cancel();
+			this.showing = showing;
+			run(popup.hasAnimationEnabled() ? ANIMATION_DURATION : 0);
+		}
+
+		@Override
+		protected void onStart() {
+			popup.maybeShowGlass(showing);
+			offsetWidth = popup.getOffsetWidth();
+			offsetHeight = popup.getOffsetHeight();
+			setClip(popup.getElement(), getRectString(0, 0, 0, 0));
+			popup.getElement().getStyle().setProperty("overflow", "hidden");
+			super.onStart();
+		}
+
+		@Override
+		protected void onComplete() {
+			setClip(popup.getElement(), "auto");
+			popup.getElement().getStyle().setProperty("overflow", "visible");
+			popup.getCloseImage().getElement().getStyle().setProperty("display", "block");
+			popup.maybeShowGlass(showing);
+		}
+
+		@Override
+		protected void onUpdate(double progress) {
+			if (!showing) {
+				progress = 1.0 - progress;
+			}
+
+			// Determine the clipping size
+			int top = 0;
+			int left = 0;
+			int right = 0;
+			int bottom = 0;
+			int width = (int) (progress * offsetWidth);
+			int height = (int) (progress * offsetHeight);
+
+			switch (popup.animType) {
+			case ROLL_DOWN:
+				right = offsetWidth;
+				bottom = height;
+				break;
+			case CENTER:
+				top = (offsetHeight - height) >> 1;
+				left = (offsetWidth - width) >> 1;
+				right = left + width;
+				bottom = top + height;
+				break;
+			case ONE_WAY_CORNER:
+				if (LocaleInfo.getCurrentLocale().isRTL()) {
+					left = offsetWidth - width;
+				}
+				right = left + width;
+				bottom = top + height;
+				break;
+			}
+
+			// Set the rect clipping
+			setClip(popup.getElement(), getRectString(top, right, bottom, left));
+		}
+
+		private void setClip(Element popup, String rect) {
+			popup.getStyle().setProperty("clip", rect);
+		}
+
+		private String getRectString(int top, int right, int bottom, int left) {
+			return "rect(" + top + "px, " + right + "px, " + bottom + "px, " + left + "px)";
+		}
 	}
 
 	public interface Resources extends ClientBundle {

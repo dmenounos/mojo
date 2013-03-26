@@ -45,7 +45,9 @@ public class PortalPopup extends WebPopup {
 	}
 
 	@Override
-	protected void doCenter() {
+	protected void prepareCenterDimension() {
+		super.prepareCenterDimension();
+
 		float documentWidth  = Document.get().getClientWidth();
 		float documentHeight = Document.get().getClientHeight();
 		float documentRatio  = documentWidth / documentHeight;
@@ -82,11 +84,11 @@ public class PortalPopup extends WebPopup {
 				imageWidth  *= scaleRatio;
 				imageHeight *= scaleRatio;
 
-				String widthString  = Math.round(imageWidth)  + "px";
-				String heightString = Math.round(imageHeight) + "px";
+				int widthPx  = Math.round(imageWidth);
+				int heightPx = Math.round(imageHeight);
 
-				getWidget().getElement().getStyle().setProperty("width",  widthString);
-				getWidget().getElement().getStyle().setProperty("height", heightString);
+				getWidget().getElement().getStyle().setPropertyPx("width",  widthPx);
+				getWidget().getElement().getStyle().setPropertyPx("height", heightPx);
 			}
 		}
 		else {
@@ -95,14 +97,12 @@ public class PortalPopup extends WebPopup {
 
 			int scrollbarsSize = 20; // approximately
 
-			String widthString  = Math.round(innerWidth)  + scrollbarsSize + "px";
-			String heightString = Math.round(innerHeight) + scrollbarsSize + "px";
+			int widthPx  = Math.round(innerWidth)  + scrollbarsSize;
+			int heightPx = Math.round(innerHeight) + scrollbarsSize;
 
-			getContainerElement().getStyle().setProperty("width",  widthString);
-			getContainerElement().getStyle().setProperty("height", heightString);
+			getContainerElement().getStyle().setPropertyPx("width",  widthPx);
+			getContainerElement().getStyle().setPropertyPx("height", heightPx);
 		}
-
-		super.doCenter();
 	}
 
 	public interface Resources extends ClientBundle {
