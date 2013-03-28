@@ -18,8 +18,6 @@ package mojo.gwt.ui.client;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -120,7 +118,9 @@ public class WebPopup extends PopupPanel {
 
 	@Override
 	public void setPopupPositionAndShow(final PositionCallback callback) {
-		if (getWidget() instanceof HasLoadHandlers) {
+		boolean loadWidget = getWidget() instanceof HasLoadHandlers;
+
+		if (loadWidget) {
 			HasLoadHandlers hasLoadHandlers = (HasLoadHandlers) getWidget();
 			hasLoadHandlers.addLoadHandler(new LoadHandler() {
 
@@ -128,6 +128,7 @@ public class WebPopup extends PopupPanel {
 				public void onLoad(LoadEvent event) {
 					callback.setPosition(getOffsetWidth(), getOffsetHeight());
 					setVisible(true);
+					resizeAnimation.setState(true);
 				}
 			});
 		}
@@ -135,9 +136,10 @@ public class WebPopup extends PopupPanel {
 		setVisible(false);
 		show();
 
-		if (!(getWidget() instanceof HasLoadHandlers)) {
+		if (!loadWidget) {
 			callback.setPosition(getOffsetWidth(), getOffsetHeight());
 			setVisible(true);
+			resizeAnimation.setState(true);
 		}
 	}
 
@@ -149,17 +151,12 @@ public class WebPopup extends PopupPanel {
 			public void setPosition(int offsetWidth, int offsetHeight) {
 				prepareCenterDimension();
 				prepareCenterPosition();
-				resizeAnimation.setState(true);
 			}
 		});
 	}
 
 	protected void prepareCenterDimension() {
 		// Reset element position and dimensions.
-		// If left/top are set from a previous call, and our content has
-		// changed, we may get a bogus getOffsetWidth because our new
-		// content is wrapping (giving a lower offset width) then it would
-		// without the previous left. Setting left/top back to 0 avoids this.
 		getElement().getStyle().setPropertyPx("left", 0);
 		getElement().getStyle().setPropertyPx("top",  0);
 		getElement().getStyle().clearWidth();
@@ -172,38 +169,20 @@ public class WebPopup extends PopupPanel {
 		int top  = (Window.getClientHeight() - getOffsetHeight()) >> 1;
 
 		// Add possible scroll offset.
-		// When the widget is larger than the view-port, the calculated
-		// space from previous step will be negative, so resort to 0.
-		left = Math.max(Window.getScrollLeft() + left, 0);
-		top  = Math.max(Window.getScrollTop()  + top,  0);
+		left = Window.getScrollLeft() + left;
+		top  = Window.getScrollTop()  + top;
 
 		setPopupPosition(left, top);
 		getElement().getStyle().setProperty("position", "absolute");
 	}
 
-	/**
-	 * Show or hide the glass.
-	 */
-	protected void maybeShowGlass(boolean showing) {
-		if (isGlassEnabled()) {
-			if (showing) {
-				Document.get().getBody().appendChild(getGlassElement());
-
-				// resizeRegistration = Window.addResizeHandler(curPanel.glassResizer);
-				// curPanel.glassResizer.onResize(null);
-			}
-			else {
-				Document.get().getBody().removeChild(getGlassElement());
-
-				// resizeRegistration.removeHandler();
-				// resizeRegistration = null;
-			}
-		}
-	}
-
 	protected static final int ANIMATION_DURATION = 200;
 	protected AnimationType animType = AnimationType.CENTER;
-	protected ResizeAnimation resizeAnimation = new ResizeAnimation(this);
+	protected ResizeAnimation resizeAnimation = createResizeAnimation();
+
+	protected ResizeAnimation createResizeAnimation() {
+		return new ResizeAnimation(this);
+	}
 
 	protected static enum AnimationType {
 		CENTER, ONE_WAY_CORNER, ROLL_DOWN
@@ -226,8 +205,6 @@ public class WebPopup extends PopupPanel {
 		 */
 		private int offsetHeight, offsetWidth = -1;
 
-		// private HandlerRegistration resizeRegistration;
-
 		public ResizeAnimation(WebPopup panel) {
 			this.popup = panel;
 		}
@@ -240,20 +217,27 @@ public class WebPopup extends PopupPanel {
 
 		@Override
 		protected void onStart() {
-			popup.maybeShowGlass(showing);
 			offsetWidth = popup.getOffsetWidth();
 			offsetHeight = popup.getOffsetHeight();
-			setClip(popup.getElement(), getRectString(0, 0, 0, 0));
-			popup.getElement().getStyle().setProperty("overflow", "hidden");
+
+			popup.getElement().getStyle().setProperty("clip", getRectString(0, 0, 0, 0));
+
+			if (popup.isClosable()) {
+				popup.getCloseImage().getElement().getStyle().setProperty("display", "none");
+			}
+
 			super.onStart();
 		}
 
 		@Override
 		protected void onComplete() {
-			setClip(popup.getElement(), "auto");
-			popup.getElement().getStyle().setProperty("overflow", "visible");
-			popup.getCloseImage().getElement().getStyle().setProperty("display", "block");
-			popup.maybeShowGlass(showing);
+			super.onComplete();
+
+			popup.getElement().getStyle().clearProperty("clip");
+
+			if (popup.isClosable()) {
+				popup.getCloseImage().getElement().getStyle().setProperty("display", "block");
+			}
 		}
 
 		@Override
@@ -291,11 +275,8 @@ public class WebPopup extends PopupPanel {
 			}
 
 			// Set the rect clipping
-			setClip(popup.getElement(), getRectString(top, right, bottom, left));
-		}
-
-		private void setClip(Element popup, String rect) {
-			popup.getStyle().setProperty("clip", rect);
+			String rect = getRectString(top, right, bottom, left);
+			popup.getElement().getStyle().setProperty("clip", rect);
 		}
 
 		private String getRectString(int top, int right, int bottom, int left) {

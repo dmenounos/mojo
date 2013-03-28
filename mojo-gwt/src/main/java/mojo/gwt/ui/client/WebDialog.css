@@ -3,7 +3,6 @@
 @external .closeImage;
 
 .WebDialog.withGlass {
-	z-index: 999;
 }
 
 .WebDialog .closeImage {

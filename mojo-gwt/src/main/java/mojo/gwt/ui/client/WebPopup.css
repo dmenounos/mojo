@@ -3,7 +3,6 @@
 @external .closeImage;
 
 .WebPopup.withGlass {
-	z-index: 999;
 }
 
 .WebPopup .closeImage {
@@ -12,6 +11,5 @@
 	height: 36px;
 	top: -22px;
 	right: -22px;
-	display: none;
 	cursor: pointer;
 }
