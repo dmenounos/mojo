@@ -27,9 +27,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 import org.hibernate.Hibernate;
-import org.hibernate.collection.PersistentCollection;
-import org.hibernate.collection.PersistentSet;
-import org.hibernate.collection.PersistentSortedSet;
+import org.hibernate.collection.internal.AbstractPersistentCollection;
+import org.hibernate.collection.internal.PersistentSet;
+import org.hibernate.collection.internal.PersistentSortedSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +44,7 @@ public class XHCollectionConverter implements Converter {
 	@Override
 	@SuppressWarnings("rawtypes")
 	public boolean canConvert(Class type) {
-		return PersistentCollection.class.isAssignableFrom(type);
+		return AbstractPersistentCollection.class.isAssignableFrom(type);
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class XHCollectionConverter implements Converter {
 
 		if (Hibernate.isInitialized(source)) {
 			logger.debug("### Unwrapping value");
-			PersistentCollection proxy = (PersistentCollection) source;
+			AbstractPersistentCollection proxy = (AbstractPersistentCollection) source;
 			Object collection = proxy.getStoredSnapshot();
 
 			// Hibernate Set snapshots are HashMaps

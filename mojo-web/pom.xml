@@ -23,12 +23,12 @@
 
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>org.springframework.web</artifactId>
+			<artifactId>spring-web</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>org.springframework.web.servlet</artifactId>
+			<artifactId>spring-webmvc</artifactId>
 		</dependency>
 
 		<dependency>
@@ -63,6 +63,18 @@
 			<artifactId>jstl-impl</artifactId>
 		</dependency>
 
+		<!-- Tiles -->
+
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-core</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.apache.tiles</groupId>
 			<artifactId>tiles-servlet</artifactId>
@@ -73,10 +85,14 @@
 			<artifactId>tiles-jsp</artifactId>
 		</dependency>
 
+			<!-- JAWR -->
+
 		<dependency>
 			<groupId>net.jawr</groupId>
 			<artifactId>jawr</artifactId>
 		</dependency>
+
+			<!-- OpenID -->
 
 		<dependency>
 			<groupId>org.openid4java</groupId>

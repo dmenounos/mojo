@@ -17,13 +17,18 @@
 	</modules>
 
 	<properties>
+
+		<java-version>1.6</java-version>
+
 		<gwt.version>2.5.1</gwt.version>
 		<tiles.version>2.2.2</tiles.version>
 		<slf4j.version>1.6.1</slf4j.version>
-		<hibernate.version>3.6.3.Final</hibernate.version>
-		<spring.version>3.0.5.RELEASE</spring.version>
-		<aspectj.version>1.6.8.RELEASE</aspectj.version>
+		<hibernate.version>4.0.1.Final</hibernate.version>
+		<spring.version>3.2.3.RELEASE</spring.version>
+		<aspectj.version>1.7.2</aspectj.version>
+
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
 	</properties>
 
 	<repositories>
@@ -44,6 +49,7 @@
 			</snapshots>
 		</repository>
 
+		<!--
 		<repository>
 			<id>spring.release</id>
 			<url>http://repository.springsource.com/maven/bundles/release</url>
@@ -67,6 +73,7 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
+		-->
 
 	</repositories>
 
@@ -95,79 +102,73 @@
 
 			<dependency>
 				<groupId>org.springframework</groupId>
-				<artifactId>org.springframework.core</artifactId>
+				<artifactId>spring-core</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.springframework</groupId>
-				<artifactId>org.springframework.beans</artifactId>
+				<artifactId>spring-beans</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.springframework</groupId>
-				<artifactId>org.springframework.context</artifactId>
+				<artifactId>spring-context</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.springframework</groupId>
-				<artifactId>org.springframework.expression</artifactId>
+				<artifactId>spring-expression</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.springframework</groupId>
-				<artifactId>org.springframework.aop</artifactId>
+				<artifactId>spring-aop</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.springframework</groupId>
-				<artifactId>org.springframework.orm</artifactId>
+				<artifactId>spring-orm</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.springframework</groupId>
-				<artifactId>org.springframework.oxm</artifactId>
+				<artifactId>spring-oxm</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.springframework</groupId>
-				<artifactId>org.springframework.jdbc</artifactId>
+				<artifactId>spring-jdbc</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.springframework</groupId>
-				<artifactId>org.springframework.transaction</artifactId>
+				<artifactId>spring-tx</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.springframework</groupId>
-				<artifactId>org.springframework.web</artifactId>
+				<artifactId>spring-web</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.springframework</groupId>
-				<artifactId>org.springframework.web.servlet</artifactId>
+				<artifactId>spring-webmvc</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.aspectj</groupId>
-				<artifactId>com.springsource.org.aspectj.weaver</artifactId>
-				<version>${aspectj.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.aspectj</groupId>
-				<artifactId>com.springsource.org.aspectj.runtime</artifactId>
+				<artifactId>aspectjweaver</artifactId>
 				<version>${aspectj.version}</version>
 			</dependency>
 
@@ -175,12 +176,6 @@
 				<groupId>com.thoughtworks.xstream</groupId>
 				<artifactId>xstream</artifactId>
 				<version>1.3.1</version>
-			</dependency>
-
-			<dependency>
-				<groupId>cglib</groupId>
-				<artifactId>cglib-nodep</artifactId>
-				<version>2.2</version>
 			</dependency>
 
 			<dependency>
@@ -204,6 +199,12 @@
 			</dependency>
 
 			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-core</artifactId>
+				<version>${hibernate.version}</version>
+			</dependency>
+
+			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
 				<version>${slf4j.version}</version>
@@ -215,12 +216,18 @@
 				<version>${slf4j.version}</version>
 			</dependency>
 
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>jcl-over-slf4j</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+
 			<!-- MySQL -->
 
 			<dependency>
 				<groupId>mysql</groupId>
 				<artifactId>mysql-connector-java</artifactId>
-				<version>5.1.8</version>
+				<version>5.1.20</version>
 			</dependency>
 
 			<!-- Java EE 5 -->
@@ -255,14 +262,20 @@
 
 			<dependency>
 				<groupId>org.apache.tiles</groupId>
+				<artifactId>tiles-api</artifactId>
+				<version>${tiles.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.tiles</groupId>
+				<artifactId>tiles-core</artifactId>
+				<version>${tiles.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.tiles</groupId>
 				<artifactId>tiles-servlet</artifactId>
 				<version>${tiles.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>org.slf4j</groupId>
-						<artifactId>jcl-over-slf4j</artifactId>
-					</exclusion>
-				</exclusions>
 			</dependency>
 
 			<dependency>
@@ -337,10 +350,10 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.3.2</version>
+					<version>3.1</version>
 					<configuration>
-						<source>1.6</source>
-						<target>1.6</target>
+						<source>${java-version}</source>
+						<target>${java-version}</target>
 					</configuration>
 				</plugin>
 
@@ -352,6 +365,18 @@
 						<warSourceDirectory>${project.basedir}/war</warSourceDirectory>
 					</configuration>
 				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-eclipse-plugin</artifactId>
+					<version>2.9</version>
+					<configuration>
+						<wtpversion>2.0</wtpversion>
+						<downloadJavadocs>true</downloadJavadocs>
+						<downloadSources>true</downloadSources>
+					</configuration>
+				</plugin>
+
 			</plugins>
 
 		</pluginManagement>
