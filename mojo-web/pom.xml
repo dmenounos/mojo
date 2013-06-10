@@ -41,14 +41,14 @@
 			<artifactId>slf4j-log4j12</artifactId>
 		</dependency>
 
+		<!-- Java EE -->
+
 		<dependency>
-			<!-- provided -->
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 		</dependency>
 
 		<dependency>
-			<!-- provided -->
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
 		</dependency>
