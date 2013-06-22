@@ -1,4 +1,0 @@
-#!/bin/sh
-mysql -h localhost -u root < mysql-schema.sql
-mysql -h localhost -u root < data/countries.sql
-mysql -h localhost -u root < data/languages.sql
