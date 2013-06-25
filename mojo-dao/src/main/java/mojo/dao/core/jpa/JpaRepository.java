@@ -22,6 +22,9 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import mojo.dao.core.DataException;
 import mojo.dao.core.DataPage;
 import mojo.dao.core.Repository;
@@ -39,6 +42,8 @@ import mojo.dao.core.spec.Select;
 import mojo.dao.core.spec.Update;
 
 public class JpaRepository<E> implements Repository<E> {
+
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@PersistenceContext
 	private EntityManager entityManager;

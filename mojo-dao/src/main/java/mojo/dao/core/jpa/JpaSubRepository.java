@@ -19,17 +19,12 @@ package mojo.dao.core.jpa;
 import java.lang.reflect.Method;
 import java.util.Collection;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import mojo.dao.core.jpa.exec.InsertDetailImpl;
 import mojo.dao.core.jpa.exec.SelectDetailImpl;
 import mojo.dao.core.jpa.exec.UpdateDetailImpl;
 import mojo.dao.core.util.Properties;
 
 public class JpaSubRepository<E> extends JpaRepository<E> {
-
-	private static final Logger logger = LoggerFactory.getLogger(JpaSubRepository.class);
 
 	private Class<?> masterType;
 	private String propertyName;
