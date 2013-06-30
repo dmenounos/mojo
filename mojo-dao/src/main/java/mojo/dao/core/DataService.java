@@ -19,6 +19,9 @@ package mojo.dao.core;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import mojo.dao.core.spec.Batch;
 import mojo.dao.core.spec.ByKey;
 import mojo.dao.core.spec.Delete;
@@ -32,6 +35,8 @@ import mojo.dao.core.spec.Update;
  * @param <E> the entity type
  */
 public class DataService<E> {
+
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
 	private Repository<E> repository;
 	private Validation<E> validation;

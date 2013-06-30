@@ -43,7 +43,7 @@ public class SelectImpl<E> extends JpaQueryExecutor<E, DataPage<E>> {
 
 	@Override
 	public DataPage<E> execute(Operation<E> spec) {
-		logger.debug("--> execute()");
+		// logger.debug("--> execute()");
 		Select<E> select = (Select<E>) spec;
 		DataPage<E> page = new DataPage<E>();
 		page.setData(fetchList(select));
@@ -57,7 +57,7 @@ public class SelectImpl<E> extends JpaQueryExecutor<E, DataPage<E>> {
 
 	@SuppressWarnings("unchecked")
 	private List<E> fetchList(Select<E> spec) {
-		logger.debug("--> fetchList()");
+		// logger.debug("--> fetchList()");
 		StringBuilder sb = new StringBuilder("select ");
 
 		if (spec.isDistinct()) {
@@ -107,7 +107,7 @@ public class SelectImpl<E> extends JpaQueryExecutor<E, DataPage<E>> {
 	}
 
 	private Long countTotal(Select<E> spec) {
-		logger.debug("--> countTotal()");
+		// logger.debug("--> countTotal()");
 		StringBuilder sb = new StringBuilder("select count(");
 
 		if (spec.isDistinct()) {
