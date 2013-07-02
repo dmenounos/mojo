@@ -55,9 +55,9 @@ public class JpaSubRepository<E> extends JpaRepository<E> {
 	/**
 	 * Defines at which side the controlling link property resides.
 	 * <ul>
-	 * <li>False: property resides to detail,<br>
+	 * <li>False: property resides to detail,<br />
 	 * i.e. Many-to-One, Many-to-One / One-to-Many</li>
-	 * <li>True: property resides to master,<br>
+	 * <li>True: property resides to master,<br />
 	 * i.e. One-to-Many, One-to-Many / Many-to-One (inverse)</li>
 	 * </ul>
 	 */
