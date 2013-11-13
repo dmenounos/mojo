@@ -112,6 +112,13 @@
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 
+		<!-- PostgreSQL -->
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+		</dependency>
+
 		<!-- Test -->
 
 		<dependency>
