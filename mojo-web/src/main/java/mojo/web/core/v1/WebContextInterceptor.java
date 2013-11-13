@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package mojo.web.core;
+package mojo.web.core.v1;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +25,10 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Spring MVC interceptor (alternative to WebContextFilter).<br />
+ * Updates the current web context into the thread local storage.
+ */
 public class WebContextInterceptor extends HandlerInterceptorAdapter {
 
 	private static final Logger logger = LoggerFactory.getLogger(WebContextInterceptor.class);

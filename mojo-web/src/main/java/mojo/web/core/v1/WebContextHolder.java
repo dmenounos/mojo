@@ -14,8 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package mojo.web.core;
+package mojo.web.core.v1;
 
+/**
+ * Thread Local web context storage.<br />
+ * Works in conjunction with either WebContextFilter or WebContextInterceptor.
+ */
 public class WebContextHolder {
 
 	private static final ThreadLocal<WebContext> context = new ThreadLocal<WebContext>();

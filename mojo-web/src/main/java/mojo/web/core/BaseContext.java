@@ -16,45 +16,36 @@
  */
 package mojo.web.core;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import mojo.dao.AuditContext;
 
-public class WebContext implements AuditContext {
+public abstract class BaseContext implements AuditContext {
 
 	/** User session attribute. */
 	public static final String CONTEXT_USER_ATTR = "contextUser";
 
-	protected final HttpServletRequest request;
-	protected final HttpServletResponse response;
-
-	public WebContext(ServletRequest request, ServletResponse response) {
-		this.request = (HttpServletRequest) request;
-		this.response = (HttpServletResponse) response;
-	}
-
 	@Override
 	public Object getUser() {
-		HttpSession session = request.getSession();
+		HttpSession session = getRequest().getSession();
 		return session.getAttribute(CONTEXT_USER_ATTR);
 	}
 
 	@Override
 	public String getRemoteUser() {
-		return request.getRemoteUser();
+		return getRequest().getRemoteUser();
 	}
 
 	@Override
 	public String getRemoteHost() {
-		return request.getRemoteHost();
+		return getRequest().getRemoteHost();
 	}
 
 	@Override
 	public boolean isUserInRole(String role) {
-		return request.isUserInRole(role);
+		return getRequest().isUserInRole(role);
 	}
+
+	protected abstract HttpServletRequest getRequest();
 }

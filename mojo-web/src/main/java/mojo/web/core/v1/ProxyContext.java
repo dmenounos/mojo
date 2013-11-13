@@ -14,29 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package mojo.web.core;
+package mojo.web.core.v1;
 
-import mojo.dao.AuditContext;
+import javax.servlet.http.HttpServletRequest;
 
-public class ProxyContext implements AuditContext {
+import mojo.web.core.BaseContext;
 
-	@Override
-	public Object getUser() {
-		return WebContextHolder.getCurrentContext().getUser();
-	}
+/**
+ * Provides the servlet request from our thread local storage.<br />
+ * Works in conjunction with either WebContextFilter or WebContextInterceptor.
+ */
+public class ProxyContext extends BaseContext {
 
-	@Override
-	public String getRemoteUser() {
-		return WebContextHolder.getCurrentContext().getRemoteUser();
-	}
-
-	@Override
-	public String getRemoteHost() {
-		return WebContextHolder.getCurrentContext().getRemoteHost();
-	}
-
-	@Override
-	public boolean isUserInRole(String role) {
-		return WebContextHolder.getCurrentContext().isUserInRole(role);
+	protected HttpServletRequest getRequest() {
+		return WebContextHolder.getCurrentContext().getRequest();
 	}
 }

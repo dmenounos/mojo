@@ -14,32 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package mojo.web.core;
+package mojo.web.core.v1;
 
-import org.springframework.beans.factory.FactoryBean;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+/**
+ * Request, Response container.
+ */
+public class WebContext {
 
-import mojo.dao.AuditContext;
+	protected final HttpServletRequest request;
+	protected final HttpServletResponse response;
 
-public class ProxyContextFactoryBean implements FactoryBean<ProxyContext> {
-
-	private static final Logger logger = LoggerFactory.getLogger(ProxyContextFactoryBean.class);
-
-	@Override
-	public ProxyContext getObject() throws Exception {
-		logger.debug("Creating proxy context object");
-		return new ProxyContext();
+	public WebContext(ServletRequest request, ServletResponse response) {
+		this.request = (HttpServletRequest) request;
+		this.response = (HttpServletResponse) response;
 	}
 
-	@Override
-	public Class<?> getObjectType() {
-		return AuditContext.class;
+	public HttpServletRequest getRequest() {
+		return request;
 	}
 
-	@Override
-	public boolean isSingleton() {
-		return true;
+	public HttpServletResponse getResponse() {
+		return response;
 	}
 }
