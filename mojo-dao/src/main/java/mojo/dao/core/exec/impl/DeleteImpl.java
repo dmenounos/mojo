@@ -14,27 +14,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package mojo.dao;
+package mojo.dao.core.exec.impl;
 
-public interface AuditContext {
+import javax.persistence.EntityManager;
 
-	/**
-	 * The application user.
-	 */
-	Object getUser();
+import mojo.dao.core.exec.JpaQueryExecutor;
+import mojo.dao.core.spec.Delete;
+import mojo.dao.core.spec.Operation;
 
-	/**
-	 * The container provided user name.
-	 */
-	String getRemoteUser();
+public class DeleteImpl<E> extends JpaQueryExecutor<E, E> {
 
-	/**
-	 * The container provided user host.
-	 */
-	String getRemoteHost();
+	@Override
+	public Class<?> getType() {
+		return Delete.class;
+	}
 
-	/**
-	 * The container provided user role.
-	 */
-	boolean isUserInRole(String role);
+	@Override
+	public E execute(Operation<E> spec) {
+		logger.debug("--> execute()");
+		Delete<E> delete = (Delete<E>) spec;
+		EntityManager entityManager = getRepository().getEntityManager();
+		E entity = entityManager.find(delete.getEntityType(), delete.getId());
+		entityManager.remove(entity);
+		entityManager.flush();
+		return entity;
+	}
 }

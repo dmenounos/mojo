@@ -14,27 +14,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package mojo.dao;
+package mojo.dao.core.exec.impl;
 
-public interface AuditContext {
+import java.util.Map;
 
-	/**
-	 * The application user.
-	 */
-	Object getUser();
+import mojo.dao.core.exec.JpaFilterExecutor;
+import mojo.dao.core.spec.BySQL;
+import mojo.dao.core.spec.Filter;
 
-	/**
-	 * The container provided user name.
-	 */
-	String getRemoteUser();
+public class BySQLImpl extends JpaFilterExecutor {
 
-	/**
-	 * The container provided user host.
-	 */
-	String getRemoteHost();
+	@Override
+	public Class<?> getType() {
+		return BySQL.class;
+	}
 
-	/**
-	 * The container provided user role.
-	 */
-	boolean isUserInRole(String role);
+	@Override
+	public void criteria(Filter spec, StringBuilder sb, Map<String, Object> params) {
+		BySQL by = (BySQL) spec;
+		String criteria = by.getCriteria();
+
+		if (criteria != null) {
+			sb.append(criteria);
+			params.putAll(by.getParams());
+		}
+	}
 }

@@ -14,27 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package mojo.dao;
+package mojo.dao.core.exec;
 
-public interface AuditContext {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-	/**
-	 * The application user.
-	 */
-	Object getUser();
+public abstract class JpaExecutor {
 
-	/**
-	 * The container provided user name.
-	 */
-	String getRemoteUser();
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-	/**
-	 * The container provided user host.
-	 */
-	String getRemoteHost();
+	protected final static String ALIAS = "e";
 
-	/**
-	 * The container provided user role.
-	 */
-	boolean isUserInRole(String role);
+	private JpaRepository<?> repository;
+
+	public JpaRepository<?> getRepository() {
+		return repository;
+	}
+
+	public void setRepository(JpaRepository<?> repository) {
+		this.repository = repository;
+	}
+
+	public abstract Class<?> getType();
 }

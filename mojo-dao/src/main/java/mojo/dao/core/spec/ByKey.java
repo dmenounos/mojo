@@ -35,7 +35,7 @@ public class ByKey implements Filter {
 	}
 
 	/**
-	 * The key that will be matched.
+	 * The key value that will be matched.
 	 */
 	public Object getKey() {
 		return key;
@@ -46,7 +46,7 @@ public class ByKey implements Filter {
 	}
 
 	/**
-	 * The relation property (optional).
+	 * The property name (optional).
 	 */
 	public String getProperty() {
 		return property;

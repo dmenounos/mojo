@@ -22,17 +22,17 @@
 
 	<!-- TEST REPOSITORIES -->
 
-	<bean id="personRepository" class="mojo.dao.core.jpa.JpaRepository">
+	<bean id="personRepository" class="mojo.dao.core.exec.JpaRepository">
 		<property name="entityType" value="mojo.dao.test.model.Person" />
 	</bean>
 
-	<bean id="petRepository" class="mojo.dao.core.jpa.JpaSubRepository">
+	<bean id="petRepository" class="mojo.dao.core.exec.JpaSubRepository">
 		<property name="entityType" value="mojo.dao.test.model.Pet" />
 		<property name="masterType" value="mojo.dao.test.model.Person" />
 		<property name="propertyName" value="owner" />
 	</bean>
 
-	<bean id="phoneRepository" class="mojo.dao.core.jpa.JpaSubRepository">
+	<bean id="phoneRepository" class="mojo.dao.core.exec.JpaSubRepository">
 		<property name="entityType" value="mojo.dao.test.model.Phone" />
 		<property name="masterType" value="mojo.dao.test.model.Person" />
 		<property name="propertyName" value="phones" />

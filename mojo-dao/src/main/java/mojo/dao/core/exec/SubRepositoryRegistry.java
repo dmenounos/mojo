@@ -14,27 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package mojo.dao;
+package mojo.dao.core.exec;
 
-public interface AuditContext {
+import java.util.HashMap;
+import java.util.Map;
 
-	/**
-	 * The application user.
-	 */
-	Object getUser();
+public class SubRepositoryRegistry {
 
-	/**
-	 * The container provided user name.
-	 */
-	String getRemoteUser();
+	private static final Map<Class<?>, JpaSubRepository<?>> repositories;
 
-	/**
-	 * The container provided user host.
-	 */
-	String getRemoteHost();
+	static {
+		repositories = new HashMap<Class<?>, JpaSubRepository<?>>();
+	}
 
-	/**
-	 * The container provided user role.
-	 */
-	boolean isUserInRole(String role);
+	protected static <T> void add(Class<T> klass, JpaSubRepository<T> repository) {
+		repositories.put(klass, repository);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> JpaSubRepository<T> get(Class<T> klass) {
+		return (JpaSubRepository<T>) repositories.get(klass);
+	}
 }

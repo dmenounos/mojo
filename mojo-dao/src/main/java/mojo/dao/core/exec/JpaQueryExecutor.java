@@ -14,27 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package mojo.dao;
+package mojo.dao.core.exec;
 
-public interface AuditContext {
+import mojo.dao.core.spec.Operation;
 
-	/**
-	 * The application user.
-	 */
-	Object getUser();
+public abstract class JpaQueryExecutor<E, R> extends JpaExecutor {
 
-	/**
-	 * The container provided user name.
-	 */
-	String getRemoteUser();
-
-	/**
-	 * The container provided user host.
-	 */
-	String getRemoteHost();
-
-	/**
-	 * The container provided user role.
-	 */
-	boolean isUserInRole(String role);
+	public abstract R execute(Operation<E> spec);
 }

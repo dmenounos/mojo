@@ -14,27 +14,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package mojo.dao;
+package mojo.dao.core.exec.impl;
 
-public interface AuditContext {
+import javax.persistence.EntityManager;
 
-	/**
-	 * The application user.
-	 */
-	Object getUser();
+import mojo.dao.core.exec.JpaQueryExecutor;
+import mojo.dao.core.spec.Operation;
+import mojo.dao.core.spec.Update;
 
-	/**
-	 * The container provided user name.
-	 */
-	String getRemoteUser();
+public class UpdateImpl<E> extends JpaQueryExecutor<E, E> {
 
-	/**
-	 * The container provided user host.
-	 */
-	String getRemoteHost();
+	@Override
+	public Class<?> getType() {
+		return Update.class;
+	}
 
-	/**
-	 * The container provided user role.
-	 */
-	boolean isUserInRole(String role);
+	@Override
+	public E execute(Operation<E> spec) {
+		logger.debug("--> execute()");
+		E entity = ((Update<E>) spec).getEntity();
+		EntityManager entityManager = getRepository().getEntityManager();
+		entity = entityManager.merge(entity);
+		entityManager.flush();
+		return entity;
+	}
 }

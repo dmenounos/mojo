@@ -48,6 +48,6 @@
 	</bean>
 
 	<!-- generic repository (untyped - operates on anything) -->
-	<bean id="repository" class="mojo.dao.core.jpa.JpaRepository" />
+	<bean id="repository" class="mojo.dao.core.exec.JpaRepository" />
 
 </beans>

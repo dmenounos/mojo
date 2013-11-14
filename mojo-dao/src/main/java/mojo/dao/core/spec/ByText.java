@@ -27,8 +27,10 @@ public class ByText implements Filter {
 
 	private static final long serialVersionUID = 1L;
 
+	// @formatter:off
 	public static final int STARTS = 1;
-	public static final int ENDS = 2;
+	public static final int ENDS   = 2;
+	// @formatter:on
 
 	private int mode;
 	private String value;
@@ -43,9 +45,9 @@ public class ByText implements Filter {
 	}
 
 	/**
-	 * Match mode:<br>
-	 * 0) has anywhere<br>
-	 * 1) starts-with<br>
+	 * Match mode:<br />
+	 * 0) has anywhere<br />
+	 * 1) starts-with<br />
 	 * 2) ends-with
 	 */
 	public int getMode() {
