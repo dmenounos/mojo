@@ -14,25 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package mojo.web.core.v2;
+package mojo.web.core;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import mojo.web.core.BaseContext;
+import javax.servlet.http.HttpServletResponse;
 
 /**
- * Provides the servlet request from a spring utility.<br />
- * This is simpler than v1, does not need a custom interceptor or filter.
+ * Request, Response container.
  */
-public class ProxyContext extends BaseContext {
+public class WebContextObject {
 
-	protected HttpServletRequest getRequest() {
-		RequestAttributes attrs = RequestContextHolder.currentRequestAttributes();
-		ServletRequestAttributes sattrs = (ServletRequestAttributes) attrs;
-		return sattrs.getRequest();
+	private final HttpServletRequest request;
+	private final HttpServletResponse response;
+
+	protected WebContextObject(ServletRequest request, ServletResponse response) {
+		this.request = (HttpServletRequest) request;
+		this.response = (HttpServletResponse) response;
+	}
+
+	public HttpServletRequest getRequest() {
+		return request;
+	}
+
+	public HttpServletResponse getResponse() {
+		return response;
 	}
 }

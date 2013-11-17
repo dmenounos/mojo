@@ -16,36 +16,23 @@
  */
 package mojo.web.core;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+/**
+ * Thread Local web context storage.<br />
+ * Works in conjunction with either WebContextFilter or WebContextInterceptor.
+ */
+public class WebContextHolder {
 
-import mojo.dao.AuditContext;
+	private static final ThreadLocal<WebContextObject> context = new ThreadLocal<WebContextObject>();
 
-public abstract class BaseContext implements AuditContext {
-
-	/** User session attribute. */
-	public static final String CONTEXT_USER_ATTR = "contextUser";
-
-	@Override
-	public Object getUser() {
-		HttpSession session = getRequest().getSession();
-		return session.getAttribute(CONTEXT_USER_ATTR);
+	public static WebContextObject getCurrentContext() {
+		return context.get();
 	}
 
-	@Override
-	public String getRemoteUser() {
-		return getRequest().getRemoteUser();
+	public static void setCurrentContext(WebContextObject value) {
+		context.set(value);
 	}
 
-	@Override
-	public String getRemoteHost() {
-		return getRequest().getRemoteHost();
+	public static void removeCurrentContext() {
+		context.remove();
 	}
-
-	@Override
-	public boolean isUserInRole(String role) {
-		return getRequest().isUserInRole(role);
-	}
-
-	protected abstract HttpServletRequest getRequest();
 }

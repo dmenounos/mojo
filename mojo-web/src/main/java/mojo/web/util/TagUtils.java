@@ -14,19 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package mojo.web.core.v1;
+package mojo.web.util;
 
-import javax.servlet.http.HttpServletRequest;
+public class TagUtils {
 
-import mojo.web.core.BaseContext;
-
-/**
- * Provides the servlet request from our thread local storage.<br />
- * Works in conjunction with either WebContextFilter or WebContextInterceptor.
- */
-public class ProxyContext extends BaseContext {
-
-	protected HttpServletRequest getRequest() {
-		return WebContextHolder.getCurrentContext().getRequest();
+	public static boolean instanceOf(Object obj, String name) throws Exception {
+		return obj != null && Class.forName(name).isAssignableFrom(obj.getClass());
 	}
 }

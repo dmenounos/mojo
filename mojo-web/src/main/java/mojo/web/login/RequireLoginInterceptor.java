@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package mojo.web.core.v3;
+package mojo.web.login;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,11 +44,17 @@ public class RequireLoginInterceptor extends HandlerInterceptorAdapter {
 		logger.debug("Handler: {}", (con != null ? con.getClass().getName() : null));
 
 		if (context.getUser() == null) {
+			if (con.getClass().isAnnotationPresent(RequireLogin.class)) {
+				logger.debug("Forbidden Controller: " + con.getClass().getName());
+				res.sendError(HttpServletResponse.SC_FORBIDDEN);
+				return false;
+			}
+
 			boolean prefixMatch = prefix != null && req.getRequestURI().startsWith(prefix);
 			boolean suffixMatch = suffix != null && req.getRequestURI().endsWith(suffix);
 
 			if (prefixMatch || suffixMatch) {
-				logger.debug("forbidden request: " + req.getRequestURI());
+				logger.debug("Forbidden URI: " + req.getRequestURI());
 				res.sendError(HttpServletResponse.SC_FORBIDDEN);
 				return false;
 			}

@@ -131,7 +131,7 @@ public class PageActivity extends BaseActivity<PagePlace> {
 					GWT.log(sb.toString());
 				}
 			}
-			 */
+			*/
 		});
 
 		builder.send();

@@ -14,31 +14,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package mojo.web.core.v1;
+package mojo.web.component;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
-/**
- * Request, Response container.
- */
-public class WebContext {
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.PageContext;
 
-	protected final HttpServletRequest request;
-	protected final HttpServletResponse response;
+public class UIChildTag extends BaseTag {
 
-	public WebContext(ServletRequest request, ServletResponse response) {
-		this.request = (HttpServletRequest) request;
-		this.response = (HttpServletResponse) response;
-	}
+	@Override
+	public void doTag() throws JspException, IOException {
+		logger.debug("-->");
 
-	public HttpServletRequest getRequest() {
-		return request;
-	}
+		PageContext pageContext = (PageContext) getJspContext();
 
-	public HttpServletResponse getResponse() {
-		return response;
+		UIComponent component = getAttribute("bean", PageContext.REQUEST_SCOPE);
+
+		if (component == null) {
+			throw new RuntimeException("Component 'bean' is null");
+		}
+
+		pageContext.getOut().flush();
+
+		component.render();
+
+		pageContext.getOut().flush();
+
+		logger.debug("<--");
 	}
 }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package mojo.web.core.v1;
+package mojo.web.core;
 
 import java.io.IOException;
 
@@ -48,7 +48,7 @@ public class WebContextFilter implements Filter {
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 		try {
 			logger.debug("Creating thread-local context object");
-			WebContext ctx = new WebContext(req, res);
+			WebContextObject ctx = new WebContextObject(req, res);
 			WebContextHolder.setCurrentContext(ctx);
 			chain.doFilter(req, res);
 		}

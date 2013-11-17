@@ -14,12 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package mojo.web.core.v1;
+package mojo.web.core;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import org.slf4j.Logger;
@@ -36,13 +35,13 @@ public class WebContextInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest req, HttpServletResponse res, Object con) throws Exception {
 		logger.debug("Creating thread-local context object");
-		WebContext ctx = new WebContext(req, res);
+		WebContextObject ctx = new WebContextObject(req, res);
 		WebContextHolder.setCurrentContext(ctx);
 		return true;
 	}
 
 	@Override
-	public void postHandle(HttpServletRequest req, HttpServletResponse res, Object con, ModelAndView mav) throws Exception {
+	public void afterCompletion(HttpServletRequest req, HttpServletResponse res, Object con, Exception ex) throws Exception {
 		logger.debug("Removing thread-local context object");
 		WebContextHolder.removeCurrentContext();
 	}
