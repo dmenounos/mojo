@@ -40,8 +40,8 @@ public class UIComponent {
 	/**
 	 * Setup component hierarchy.
 	 */
-	protected UIComponent(String id) {
-		setId(id);
+	protected UIComponent() {
+		setId(getClass().getSimpleName());
 		viewStack = UIComponentViews.resolveViews(getClass());
 	}
 
@@ -63,19 +63,16 @@ public class UIComponent {
 		UIComponent component = this;
 
 		String compPath = component.getPath();
-		String currView = (String) getRequest().getAttribute("view");
-		String nextView = "/WEB-INF/jsp/" + viewStack.get(viewIndex++) + ".jsp";
+		String nextView = component.nextView();
 
 		logger.debug("CONTAINER: {}", container);
 		logger.debug("COMPONENT: {}", component);
 		logger.debug("COMP-PATH: {}", compPath);
-		logger.debug("CURR-VIEW: {}", currView);
 		logger.debug("NEXT-VIEW: {}", nextView);
 
 		// setup render context
-		getRequest().setAttribute(compPath, this);
-		getRequest().setAttribute("view", nextView);
 		getRequest().setAttribute("bean", component);
+		getRequest().setAttribute(compPath, component);
 
 		try {
 			// do the actual jsp render
@@ -88,7 +85,6 @@ public class UIComponent {
 
 		// restore render context
 		getRequest().setAttribute("bean", container);
-		getRequest().setAttribute("view", currView);
 	}
 
 	/**
@@ -139,6 +135,10 @@ public class UIComponent {
 		}
 
 		return sb.toString();
+	}
+
+	protected String nextView() {
+		return "/WEB-INF/jsp/" + viewStack.get(viewIndex++) + ".jsp";
 	}
 
 	protected boolean isAjaxRequest() {

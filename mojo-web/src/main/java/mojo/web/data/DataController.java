@@ -20,6 +20,7 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,19 +45,19 @@ public class DataController<E> {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/find", method = RequestMethod.GET)
-	public E doFind(@RequestParam Integer id) {
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	public E doFind(@PathVariable Integer id) {
 		return service.findById(id);
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/fetch", method = RequestMethod.GET)
+	@RequestMapping(value = "/select", method = RequestMethod.GET)
 	public DataPage<E> doFetch(@RequestBody Select<E> spec) {
 		return service.select(spec);
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/fetch-view", method = RequestMethod.GET)
+	@RequestMapping(value = "/select-view", method = RequestMethod.GET)
 	public DataPage<?> doFetchView(@RequestBody Select<E> spec, @RequestParam String view) {
 		try {
 			DataPage<E> page = service.select(spec);

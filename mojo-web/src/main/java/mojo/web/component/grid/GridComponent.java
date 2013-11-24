@@ -32,8 +32,7 @@ public class GridComponent<T> extends UIComponent {
 
 	private String title;
 
-	public GridComponent(String id) {
-		super(id);
+	public GridComponent() {
 		columns = new ArrayList<Column>();
 	}
 

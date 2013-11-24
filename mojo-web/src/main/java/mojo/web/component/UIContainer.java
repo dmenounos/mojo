@@ -23,10 +23,6 @@ public class UIContainer extends UIComponent {
 
 	private List<UIComponent> children;
 
-	protected UIContainer(String id) {
-		super(id);
-	}
-
 	public UIContainer add(UIComponent c) {
 		for (UIComponent comp : getChildren()) {
 			if (c.getId().equals(comp.getId())) {

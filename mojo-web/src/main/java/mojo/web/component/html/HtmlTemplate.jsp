@@ -16,13 +16,13 @@
 			<link rel="stylesheet" href="${style}" />
 		</c:forEach>
 
-		<c:forEach var="script" items="${bean.scripts}">
-			<script src="${script}"></script>
-		</c:forEach>
-
 		<script type="text/javascript">
 			contextPath = '${contextPath}';
 		</script>
+
+		<c:forEach var="script" items="${bean.scripts}">
+			<script src="${script}"></script>
+		</c:forEach>
 
 	</head>
 	<body>

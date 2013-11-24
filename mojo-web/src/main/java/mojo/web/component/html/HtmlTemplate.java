@@ -27,9 +27,7 @@ public class HtmlTemplate extends UIContainer {
 	private List<String> styles;
 	private List<String> scripts;
 
-	protected HtmlTemplate(String id) {
-		super(id);
-
+	protected HtmlTemplate() {
 		String contextPath = getRequest().getContextPath();
 
 		// Init global jsp attributes.
@@ -59,5 +57,16 @@ public class HtmlTemplate extends UIContainer {
 		}
 
 		return scripts;
+	}
+
+	@Override
+	protected String nextView() {
+		String result = super.nextView();
+
+		if (isAjaxRequest() && result.contains("HtmlTemplate")) {
+			result = result.replace("HtmlTemplate", "HtmlTemplateAjax");
+		}
+
+		return result;
 	}
 }

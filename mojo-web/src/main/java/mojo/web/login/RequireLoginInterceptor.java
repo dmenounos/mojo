@@ -36,46 +36,16 @@ public class RequireLoginInterceptor extends HandlerInterceptorAdapter {
 	@Qualifier("auditContext")
 	private AuditContext context;
 
-	private String prefix;
-	private String suffix;
-
 	@Override
 	public boolean preHandle(HttpServletRequest req, HttpServletResponse res, Object con) throws Exception {
 		logger.debug("Handler: {}", (con != null ? con.getClass().getName() : null));
 
-		if (context.getUser() == null) {
-			if (con.getClass().isAnnotationPresent(RequireLogin.class)) {
-				logger.debug("Forbidden Controller: " + con.getClass().getName());
-				res.sendError(HttpServletResponse.SC_FORBIDDEN);
-				return false;
-			}
-
-			boolean prefixMatch = prefix != null && req.getRequestURI().startsWith(prefix);
-			boolean suffixMatch = suffix != null && req.getRequestURI().endsWith(suffix);
-
-			if (prefixMatch || suffixMatch) {
-				logger.debug("Forbidden URI: " + req.getRequestURI());
-				res.sendError(HttpServletResponse.SC_FORBIDDEN);
-				return false;
-			}
+		if (context.getUser() == null && con.getClass().isAnnotationPresent(RequireLogin.class)) {
+			logger.debug("Forbidden Controller: " + con.getClass().getName());
+			res.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return false;
 		}
 
 		return true;
-	}
-
-	public String getPrefix() {
-		return prefix;
-	}
-
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
-	}
-
-	public String getSuffix() {
-		return suffix;
-	}
-
-	public void setSuffix(String suffix) {
-		this.suffix = suffix;
 	}
 }

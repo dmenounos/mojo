@@ -47,7 +47,7 @@ public class SpringUtils implements ApplicationContextAware {
 	@SuppressWarnings("unchecked")
 	public static <T> T getComponent(Class<?> klass) {
 		String name = Introspector.decapitalize(klass.getSimpleName());
-		return (T) applicationContext.getBean(name, name);
+		return (T) applicationContext.getBean(name);
 	}
 
 	@Override
