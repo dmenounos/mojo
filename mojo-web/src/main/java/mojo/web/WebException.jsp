@@ -8,3 +8,10 @@
 		</c:forEach>
 	</fmt:message>
 </p>
+
+<!--
+Exception: ${exception.message}
+<c:forEach items="${exception.stackTrace}" var="ste">
+	${ste}
+</c:forEach>
+-->

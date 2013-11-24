@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import mojo.web.core.WebContextHolder;
 
-public class UIComponent {
+public abstract class UIComponent {
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -38,9 +38,9 @@ public class UIComponent {
 	private List<String> viewStack;
 
 	/**
-	 * Setup component hierarchy.
+	 * Setup the component hierarchy.
 	 */
-	protected UIComponent() {
+	public UIComponent() {
 		setId(getClass().getSimpleName());
 		viewStack = UIComponentViews.resolveViews(getClass());
 	}
@@ -100,7 +100,7 @@ public class UIComponent {
 		return id;
 	}
 
-	protected void setId(String id) {
+	public void setId(String id) {
 		if (id == null || id.isEmpty()) {
 			throw new RuntimeException("Empty component id.");
 		}

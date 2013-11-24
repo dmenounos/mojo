@@ -19,7 +19,7 @@ package mojo.web.component;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UIContainer extends UIComponent {
+public abstract class UIContainer extends UIComponent {
 
 	private List<UIComponent> children;
 
