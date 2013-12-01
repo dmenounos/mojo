@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<module>
-
-	<generate-with class="mojo.gwt.i18n.rebind.JSConstantsGenerator">
-		<when-type-assignable class="mojo.gwt.i18n.client.JSConstants" />
-	</generate-with>
-
-</module>
