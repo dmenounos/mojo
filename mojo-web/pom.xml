@@ -67,16 +67,6 @@
 
 		<dependency>
 			<groupId>org.apache.tiles</groupId>
-			<artifactId>tiles-api</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.tiles</groupId>
-			<artifactId>tiles-core</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.tiles</groupId>
 			<artifactId>tiles-servlet</artifactId>
 		</dependency>
 
@@ -85,14 +75,14 @@
 			<artifactId>tiles-jsp</artifactId>
 		</dependency>
 
-			<!-- JAWR -->
+		<!-- JAWR -->
 
 		<dependency>
 			<groupId>net.jawr</groupId>
 			<artifactId>jawr</artifactId>
 		</dependency>
 
-			<!-- OpenID -->
+		<!-- OpenID -->
 
 		<dependency>
 			<groupId>org.openid4java</groupId>
@@ -110,11 +100,11 @@
 			</resource>
 
 			<resource>
-				<!-- gwt sources and web resources -->
+				<!-- web resources -->
 				<directory>${project.basedir}/src/main/java</directory>
 				<includes>
-					<include>*/gwt/*/client/**</include>
 					<include>**/*.jsp</include>
+					<include>**/*.tag</include>
 				</includes>
 			</resource>
 

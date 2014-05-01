@@ -43,10 +43,7 @@ public class RequireLoginInterceptor extends HandlerInterceptorAdapter {
 		if (context.getUser() == null && con.getClass().isAnnotationPresent(RequireLogin.class)) {
 			logger.debug("Forbidden Controller: " + con.getClass().getName());
 
-			if ("XMLHttpRequest".equals(req.getHeader("X-Requested-With"))) {
-				res.sendError(HttpServletResponse.SC_FORBIDDEN);
-				return false;
-			}
+			res.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
 			throw new RequireLoginException();
 		}

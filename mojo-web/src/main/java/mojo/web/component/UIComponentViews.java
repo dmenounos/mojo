@@ -55,12 +55,9 @@ public class UIComponentViews {
 			klass = klass.getSuperclass();
 		}
 
-		if (!klassViews.isEmpty()) {
-			logger.info("Caching view: " + klassName + " " + klassViews);
-			views.put(klassName, klassViews);
-			return klassViews;
-		}
+		logger.info("Caching view: " + klassName + " " + klassViews);
+		views.put(klassName, klassViews);
 
-		throw new RuntimeException("Could not resolve view for: " + klassName);
+		return klassViews;
 	}
 }
