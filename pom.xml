@@ -12,8 +12,8 @@
 
 	<modules>
 
-		<module>mojo-dao</module>
-		<module>mojo-web</module>
+		<module>mojo-core</module>
+		<module>mojo-view</module>
 
 	</modules>
 
@@ -96,13 +96,13 @@
 
 			<dependency>
 				<groupId>mojo</groupId>
-				<artifactId>mojo-dao</artifactId>
+				<artifactId>mojo-core</artifactId>
 				<version>1.0</version>
 			</dependency>
 
 			<dependency>
 				<groupId>mojo</groupId>
-				<artifactId>mojo-web</artifactId>
+				<artifactId>mojo-view</artifactId>
 				<version>1.0</version>
 			</dependency>
 
