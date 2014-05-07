@@ -138,7 +138,7 @@ public abstract class UIComponent {
 	}
 
 	protected String nextView() {
-		return "/WEB-INF/jsp/" + viewStack.get(viewIndex++) + ".jsp";
+		return "/WEB-INF/jsp/" + viewStack.get(viewIndex++);
 	}
 
 	protected boolean isAjaxRequest() {

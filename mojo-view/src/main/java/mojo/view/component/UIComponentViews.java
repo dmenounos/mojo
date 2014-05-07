@@ -49,7 +49,7 @@ public class UIComponentViews {
 			logger.debug("Looking path: " + viewPath);
 
 			if (checkResource(viewPath)) {
-				klassViews.add(0, viewName);
+				klassViews.add(0, viewPath);
 			}
 
 			klass = klass.getSuperclass();
